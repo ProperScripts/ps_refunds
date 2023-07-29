@@ -1,0 +1,15 @@
+.homepage {
+    width: 50%;
+}
+
+body {
+    background-color: transparent !important;
+}
+
+.container-mainscreen {
+    display: none;
+}
+
+div.btn {
+    cursor: pointer;
+}
