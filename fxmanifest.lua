@@ -19,3 +19,8 @@ ui_page 'nui/index.html'
 files {
     "nui/*"
 }
+
+lua54 'yes'
+escrow_ignore {
+    '*'
+}
