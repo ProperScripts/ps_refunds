@@ -59,6 +59,7 @@ end
 
 RegisterNetEvent('ps_refunds:server:addRefund', function(args)
   local source = source
+  if not IsPlayerAceAllowed(source, 'command.' .. Config.adminmenuCommand) then return print(GetPlayerName(source) .. ' (' .. tostring(source) .. ') tried to use ps_refunds:server:addRefund but lacks the ace permission `command.' .. Config.adminmenuCommand .. '`') end
   local encoded = LoadResourceFile(GetCurrentResourceName(), "./data.json") --data ophalen
   local data = json.decode(encoded)
   local identifier = args.values
@@ -124,7 +125,8 @@ RegisterNetEvent('ps_refunds:server:getRefunds', function ()
 end)
 
 RegisterNetEvent('ps_refunds:server:remove', function(index)
-  local source = GetPedSourceOfDamage
+  local source = source
+  if not IsPlayerAceAllowed(source, 'command.' .. Config.adminmenuCommand) then return print(GetPlayerName(source) .. ' (' .. tostring(source) .. ') tried to use ps_refunds:server:remove but lacks the ace permission `command.' .. Config.adminmenuCommand .. '`') end
   local encoded = LoadResourceFile(GetCurrentResourceName(), "/data.json")
   local data = json.decode(encoded)
 
