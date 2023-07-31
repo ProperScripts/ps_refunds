@@ -3,7 +3,7 @@ Config = {}
 Config.useESX = true                                -- true for esx, false for QBCore
 Config.refundOnJoin = true                           -- give refund when player joins
 Config.adminmenuCommand = "refunds"                  -- Command to open refund menu for admins
-Config.bonusCommand = 'claimrefund'                  -- Command to claim refund, (false) to disable
+Config.refundCommand = 'claimrefund'                  -- Command to claim refund, (false) to disable
 
 Config.useProperLogs = false                         -- own logs system (Comming soon :) ), keep on false
 

@@ -22,8 +22,8 @@ if Config.refundOnJoin then
   end
 end
 
-if Config.bonusCommand then
-  RegisterCommand(Config.bonusCommand, function (source, args, rawCommand)
+if Config.refundCommand then
+  RegisterCommand(Config.refundCommand, function (source, args, rawCommand)
     claimRefund(source)
   end)
 end
@@ -44,9 +44,9 @@ function claimRefund(source)
     if iden[1] == identifier then
       table.remove(data, i)
       if Config.useESX then
-        ESX.GetPlayerFromId(source).addAccountMoney('bank', tonumber(v.count), "Received bonus: " .. v.reason)
+        ESX.GetPlayerFromId(source).addAccountMoney('bank', tonumber(v.count), "Received refund: " .. v.reason)
       else
-        QBCore.Functions.GetPlayer(source).Functions.AddMoney('bank', tonumber(v.count), "Received bonus: " .. v.reason)
+        QBCore.Functions.GetPlayer(source).Functions.AddMoney('bank', tonumber(v.count), "Received refund: " .. v.reason)
       end
       Config.receivedRefund(source, v)
       -- print to json
