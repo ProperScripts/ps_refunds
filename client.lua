@@ -29,3 +29,12 @@ RegisterNUICallback('remove', function (data, cb)
     TriggerServerEvent('ps_refunds:server:remove', data.index)
     TriggerServerEvent('ps_refunds:server:getRefunds')   --refresh
 end)
+
+RegisterNUICallback('checkvaliditem', function (data, cb)
+    -- check if item is valid
+    TriggerServerEvent('ps_refunds:server:checkitemvalid', data.item)
+end)
+
+RegisterNetEvent('ps_refunds:client:checkitemvalid', function (value)
+
+end)

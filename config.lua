@@ -8,9 +8,9 @@ Config.refundCommand = 'claimrefund'                  -- Command to claim refund
 Config.useProperLogs = false                         -- own logs system (Comming soon :) ), keep on false
 
 
-Config.receivedRefund = function (source, data)
+Config.receivedRefund = function (source, data, items)
     if Config.useESX then
-        TriggerClientEvent("esx:showNotification", source, "Received refund ($" .. data.count .. "): " .. data.reason)
+        TriggerClientEvent("esx:showNotification", source, "Received refund ($" .. data.count .. "), " .. items .. ": " .. data.reason)
     else
         TriggerClientEvent('QBCore:Notify', source, "Received refund ($" .. data.count .. "): " .. data.reason, 'success')
     end

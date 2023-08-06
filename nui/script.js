@@ -12,11 +12,16 @@ window.addEventListener('message', function (event) {
 
         if (item.data.length == 0) {
             $('#bodyTable').empty()
-            $('#bodyTable').append('<td colspan="4" style="text-align: center; margin-top: 64px">No refunds found!</p>')
+            $('#bodyTable').append('<td colspan="5" style="text-align: center; margin-top: 64px">No refunds found!</p>')
         }
         for (var i = 0; i < item.data.length; i++) {
+            let itemsString = '';
+            item.data[i].items.forEach(element => {
+                itemsString += element[1] + 'x ' + element[0] + '; ';
+            });
             newRows += "<tr><td>" + item.data[i].identifier +
                 "</td><td>" + item.data[i].count +
+                "</td><td>" + itemsString +
                 "</td><td>" + item.data[i].reason +
                 "</td><td>" + "<button type='button' onclick='removeIndex(" + i + ");' class='btn btn-secondary btn-sm'>Remove</button>" +
                 "</td></tr>";
@@ -61,15 +66,67 @@ submitButton.onclick = function () {
     var values = $('#playerselector').val();
     var amount = $('#amount').val();
     var reason = $('#reason').val();
-    if (values.length < 1 || amount == "" || reason == "") return;
+    if (values == "" || reason == "") return;
+    if (amount == "") {
+        amount = "0"
+    }
     $.post(
         "https://ps_refunds/submit",
         JSON.stringify({
             values: values,
             amount: amount,
-            reason: reason
+            reason: reason,
+            items: itemsToGive
         })
     );
+}
+
+var itemsToGive = []
+
+var inputItems = document.getElementById("items")
+
+function additem(e) {
+    var keycode;
+    if (window.event)
+        keycode = window.event.keyCode;
+    else if (e)
+        keycode = e.which;
+    if (keycode === 13 && e.value != "") {
+
+        $.post(
+            "https://ps_refunds/checkvaliditem",
+            JSON.stringify({
+                item: e.value,
+            })
+        );
+
+        var count = document.querySelector('#itemsCount').value;
+        if (count === "") {
+            count = 1;
+        }
+        var itemlist = document.getElementById("itemList")
+        let div = document.createElement("div")
+        itemsToGive.push([e.value, count])
+        div.classList.add("item")
+        div.id = e.value
+        console.log("index: " + (itemsToGive.length - 1))
+        div.setAttribute("index", (itemsToGive.length - 1))
+        div.innerHTML = e.value + " (" + count + ")" + " <a onclick=\"removeItem('" + e.value + "')\">❌</a>"
+        itemlist.appendChild(div)
+        e.value = ""
+
+
+        console.log(itemsToGive)
+    }
+}
+
+function removeItem(item) {
+    var itemlist = document.getElementById("itemList")
+    var index = document.getElementById(item).getAttribute("index")
+    console.log("index: " + index)
+    itemsToGive[index] = null
+    itemlist.removeChild(document.getElementById(item))
+    console.log(itemsToGive)
 }
 
 function loadPlayers(AllPlayers) {

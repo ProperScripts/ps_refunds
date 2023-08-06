@@ -28,9 +28,22 @@ if Config.refundCommand then
   end)
 end
 
+RegisterNetEvent('ps_refunds:server:checkitemvalid', function (item)
+  local source = source
+  local value = false;
+  if ESX.Items[item] then
+    value = true;
+  else
+    value = false
+  end
+  TriggerClientEvent('ps_refunds:client:checkitemvalid', source, value)
+end)
+
 
 -- check for refunds
 function claimRefund(source)
+
+
   local identifier
   if Config.useESX then
     identifier = ESX.GetPlayerFromId(source).getIdentifier()
@@ -43,12 +56,23 @@ function claimRefund(source)
     local iden = mysplit(v.identifier, " -")
     if iden[1] == identifier then
       table.remove(data, i)
+      local itemString = ""
       if Config.useESX then
-        ESX.GetPlayerFromId(source).addAccountMoney('bank', tonumber(v.count), "Received refund: " .. v.reason)
+        local player = ESX.GetPlayerFromId(source);
+        if tonumber(v.count) > 1 then
+          player.addAccountMoney('bank', tonumber(v.count), "Received refund: " .. v.reason)
+        end
+        for j, k in pairs(v.items) do
+          local itemname = k[1]
+          local count = tonumber(k[2])
+          player.addInventoryItem(itemname, count)
+          itemString = itemString .. count .. "x " .. itemname .. "; "
+        end
       else
+        -- need to add giveitem function
         QBCore.Functions.GetPlayer(source).Functions.AddMoney('bank', tonumber(v.count), "Received refund: " .. v.reason)
       end
-      Config.receivedRefund(source, v)
+      Config.receivedRefund(source, v, itemString)
       -- print to json
       SaveResourceFile(GetCurrentResourceName(), "./data.json", json.encode(data), -1)
       break
@@ -63,10 +87,18 @@ RegisterNetEvent('ps_refunds:server:addRefund', function(args)
   local encoded = LoadResourceFile(GetCurrentResourceName(), "./data.json") --data ophalen
   local data = json.decode(encoded)
   local identifier = args.values
+  local items = {}
+  for i, v in pairs(args.items) do
+    if v ~= nil then
+      items[#items+1] = v
+    end
+  end
   -- if identifier = -1 (all players in the database)
   for _, v in pairs(identifier) do
-    data = addToTable(data, v, args.amount, args.reason)
+    data = addToTable(data, v, args.amount, args.reason, items)
   end
+
+  print(json.encode(args.items[1]))
 
   SaveResourceFile(GetCurrentResourceName(), "./data.json", json.encode(data), -1)
 
@@ -135,12 +167,13 @@ RegisterNetEvent('ps_refunds:server:remove', function(index)
   SaveResourceFile(GetCurrentResourceName(), "./data.json", json.encode(data), -1)
 end)
 
-function addToTable(data, identifier, count, reason)
+function addToTable(data, identifier, count, reason, items)
   local t =
   {
     identifier = identifier,
     count = count,
-    reason = reason
+    reason = reason,
+    items = items
   }
   table.insert(data, t)
   return data

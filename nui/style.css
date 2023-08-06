@@ -13,3 +13,19 @@ body {
 div.btn {
     cursor: pointer;
 }
+
+.item {
+    display: inline-block;
+    border-style: solid;
+    border-radius: 8px;
+    border-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    margin: 12px 8px 12px 0;
+    padding: 2px 2px 2px 6px;
+    color: black;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}

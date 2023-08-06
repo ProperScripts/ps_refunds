@@ -31,7 +31,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Amount</th>
+                                    <th>Amount (money)</th>
+                                    <th>Items + count</th>
                                     <th>Reason</th>
                                     <th>Remove</th>
                                 </tr>
@@ -66,9 +67,22 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="amount">Amount</label>
+                        <label for="amount">Amount (money)</label>
                         <input type="number" class="form-control" id="amount" placeholder="Amount">
                     </div>
+                    <div class="row">
+                        <div class="form-group col-sm-8">
+                            <label for="items">Items (enter to apply)</label>
+                            <input type="text" class="form-control col-sm-8" id="items" onkeydown="additem(this)"
+                                placeholder="Items">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="itemsCount">Items count</label>
+                            <input type="number" class="form-control col-sm-8" id="itemsCount" placeholder="Item count"
+                                onkeydown="additem(document.getElementById('items'))">
+                        </div>
+                    </div>
+                    <div id="itemList"></div>
                     <div class="form-group">
                         <label for="reason">Reason</label>
                         <input type="text" class="form-control" id="reason" placeholder="Reason">
