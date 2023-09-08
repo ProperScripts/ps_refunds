@@ -84,21 +84,21 @@ end
 RegisterNetEvent('ps_refunds:server:addRefund', function(args)
   local source = source
   if not IsPlayerAceAllowed(source, 'command.' .. Config.adminmenuCommand) then return print(GetPlayerName(source) .. ' (' .. tostring(source) .. ') tried to use ps_refunds:server:addRefund but lacks the ace permission `command.' .. Config.adminmenuCommand .. '`') end
-  local encoded = LoadResourceFile(GetCurrentResourceName(), "./data.json") --data ophalen
+  local encoded = LoadResourceFile(GetCurrentResourceName(), "./data.json")
   local data = json.decode(encoded)
   local identifier = args.values
   local items = {}
+  local itemString = ""
   for i, v in pairs(args.items) do
     if v ~= nil then
       items[#items+1] = v
+      itemString = itemString .. v[2] .. "x " .. v[1] .. "; "
     end
   end
   -- if identifier = -1 (all players in the database)
   for _, v in pairs(identifier) do
     data = addToTable(data, v, args.amount, args.reason, items)
   end
-
-  print(json.encode(args.items[1]))
 
   SaveResourceFile(GetCurrentResourceName(), "./data.json", json.encode(data), -1)
 
@@ -107,7 +107,8 @@ RegisterNetEvent('ps_refunds:server:addRefund', function(args)
       ['creator'] = json.encode(ESX.GetPlayerFromId(source).getIdentifier()),
       ['target'] = json.encode(identifier),
       ['reason'] = args.reason,
-      ['value'] = args.amount,
+      ['money'] = args.amount,
+      ['items'] = itemString,
     }
     exports['properlogs']:registerLog('refunds', logsData)
   end
